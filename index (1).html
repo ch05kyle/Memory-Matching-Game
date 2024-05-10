@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>Emoji 記憶遊戲</title>
+
+<style>
+
+  h1 {
+    height: 50px;
+    padding: 10px
+      color: white;
+      background-color: #666666;
+    color: #FFFFFF;
+    padding: 20px;
+    text-align: center;
+  }
+
+
+  footer {
+    padding: 10px 0;
+     color: white;
+      padding: 20px;
+      background-color: #666666;
+    color: #FFFFFF;
+    display: grid;
+    height: 20px;
+  }
+
+  .grid {
+    margin: auto; 
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
+    justify-content: center;
+    text-align: center;
+  }
+  .card {
+    margin: auto; 
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    background-color: #FFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    cursor: pointer;
+
+  }
+  .hidden {
+    background-color: #PPU26-11;
+  }
+
+
+
+</style>
+</head>
+<body>
+  <center>
+  <header>
+      <h1>記憶碎片</h1>
+  </header>
+
+  <div id="game" class="grid">
+    <!-- 這裡會用JavaScript動態生成卡片 -->
+  </div>
+  <footer>
+      <b> 重設遊戲</b>
+  </footer>
+    </center>
+
+
+
+<script>
+
+
+// Emoji 列表
+const emojis = [ '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '😂'];
+let selectedEmojis = [...emojis, ...emojis]; // 需要兩份emoji來匹配
+let selected = []; // 存儲選擇的卡片
+let matched = []; // 存儲匹配成功的卡片
+
+// 初始化遊戲
+function initGame() {
+  selectedEmojis.sort(() => 0.5 - Math.random()); // 打亂emoji順序
+  const game = document.getElementById('game');
+  game.innerHTML = ''; // 清空遊戲面板
+  selectedEmojis.forEach((emoji, index) => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.dataset.index = index;
+    card.innerHTML = emoji;
+    game.appendChild(card);
+  });
+  setTimeout(hideEmojis, 5000); // 10秒後隱藏emoji
+}
+
+// 隱藏emoji
+function hideEmojis() {
+  document.querySelectorAll('.card').forEach(card => {
+    card.classList.add('hidden');
+    card.innerHTML = '';
+  });
+  document.getElementById('game').addEventListener('click', selectCard);
+}
+
+// 選擇卡片
+function selectCard(event) {
+  const clickedCard = event.target;
+  if (clickedCard.classList.contains('card') && !clickedCard.classList.contains('matched') && selected.length < 2) {
+    const index = clickedCard.dataset.index;
+    clickedCard.innerHTML = selectedEmojis[index];
+    clickedCard.classList.remove('hidden');
+    selected.push(clickedCard);
+    if (selected.length === 2) {
+      checkMatch();
+    }
+  }
+}
+
+// 檢查是否匹配
+function checkMatch() {
+  if (selected[0].innerHTML === selected[1].innerHTML) {
+    matched.push(...selected);
+    selected.forEach(card => card.classList.add('matched'));
+    selected = [];
+    if (matched.length === selectedEmojis.length) {
+      displayCompletionMessage();
+    }
+  } else {
+    setTimeout(() => {
+      selected.forEach(card => {
+        card.innerHTML = '';
+        card.classList.add('hidden');
+      });
+      selected = [];
+    }, 1000);
+  }
+}
+
+
+  // 顯示完成訊息的函數
+  function displayCompletionMessage() {
+    const grid = document.querySelector('.grid');
+    const cards = Array.from(grid.children);
+    const middleCards = [
+      cards[5], cards[6],
+      cards[9], cards[10]
+    ];
+
+      const completionText = '你已完成';
+      middleCards.forEach((card, index) => {
+        card.innerHTML = completionText[index];
+      card.classList.remove('hidden', 'matched');
+      card.style.backgroundColor = '#46B5FA'; // 給完成訊息一個新顏色
+      card.style.color = '#fff';
+      card.style.fontSize = '1'; // 調整字體大小以適應方格
+    });
+  }
+
+
+
+
+  // 重新開始遊戲的函數
+  function restartGame() {
+    matched = [];
+    initGame();
+  }
+
+  // 當點擊footer時，調用restartGame函數
+  document.querySelector('footer').addEventListener('click', restartGame);
+
+initGame(); // 啟動遊戲
+</script>
+
+</body>
+</html>
