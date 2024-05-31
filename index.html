@@ -60,11 +60,11 @@
 <body>
   <center>
   <header>
-      <h1>記憶碎片</h1>
+      <h1>記憶遊戲</h1>
   </header>
 
   <div id="game" class="grid">
-    <!-- 這裡會用JavaScript動態生成卡片 -->
+  <!-- JavaScript動態生成卡片-->
   </div>
   <footer>
       <b> 重設遊戲</b>
@@ -84,7 +84,7 @@ let matched = []; // 存儲匹配成功的卡片
 
 // 初始化遊戲
 function initGame() {
-  selectedEmojis.sort(() => 0.5 - Math.random()); // 打亂emoji順序
+  selectedEmojis.sort(() => 0.5 - Math.random()); // 打亂emoji順序*****
   const game = document.getElementById('game');
   game.innerHTML = ''; // 清空遊戲面板
   selectedEmojis.forEach((emoji, index) => {
@@ -94,7 +94,7 @@ function initGame() {
     card.innerHTML = emoji;
     game.appendChild(card);
   });
-  setTimeout(hideEmojis, 5000); // 10秒後隱藏emoji
+  setTimeout(hideEmojis);
 }
 
 // 隱藏emoji
@@ -143,21 +143,7 @@ function checkMatch() {
 
   // 顯示完成訊息的函數
   function displayCompletionMessage() {
-    const grid = document.querySelector('.grid');
-    const cards = Array.from(grid.children);
-    const middleCards = [
-      cards[5], cards[6],
-      cards[9], cards[10]
-    ];
-
-      const completionText = '你已完成';
-      middleCards.forEach((card, index) => {
-        card.innerHTML = completionText[index];
-      card.classList.remove('hidden', 'matched');
-      card.style.backgroundColor = '#46B5FA'; // 給完成訊息一個新顏色
-      card.style.color = '#fff';
-      card.style.fontSize = '1'; // 調整字體大小以適應方格
-    });
+     alert('恭喜你完成遊戲！');
   }
 
 
